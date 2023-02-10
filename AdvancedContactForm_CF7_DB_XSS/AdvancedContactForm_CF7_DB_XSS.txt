@@ -1,5 +1,5 @@
-Reflected XSS (Cross-Site Scripting) attack
--------------------------------------------
+Reflected XSS (Cross-Site Scripting) attack - CVE-2022-45285 
+------------------------------------------------------------
 
 
 Vendor: Vsourz Digital
